@@ -43,7 +43,7 @@
             <span class="hero-title-line">y <em>Narrativas Espaciales</em>.</span>
         </h1>
         <p data-i18n="hero_desc" class="hero-desc">
-            Al frente del diseño de experiencias inmersivas e innovación de sistemas en Intercorp. Conectando hardware, inteligencia artificial y comportamiento humano para elevar el estándar local hacia una escala global.
+            Al frente del diseño de experiencias inmersivas e innovación de sistemas en Intercorp. Conectando hardware, inteligencia artificial y comportamiento humano para elevar el estándar local hacia un standard global.
         </p>
         <a href="#work" data-i18n="hero_cta" class="btn-primary">Ver Trabajo Seleccionado ↓</a>
     </section>
@@ -55,12 +55,12 @@
         </div>
 
         <div class="bento-grid">
-            <article class="bento-card tall span-8 project-card" data-project="piso19" tabindex="0" role="button" aria-label="Piso 19: The Immersive Corporate Hub">
+            <article class="bento-card tall span-8 project-card" data-project="piso19" tabindex="0" role="button" data-i18n-aria="piso19_title" aria-label="Piso 19: Iterando un Ecosistema Phygital de Clase Mundial (V2.0)">
                 <div>
                     <span data-i18n="piso19_label" class="card-label font-mono">Caso Insignia // Interacción y Arquitectura AV</span>
-                    <h3 class="card-title lg font-display">Piso 19: The Immersive Corporate Hub</h3>
+                    <h3 data-i18n="piso19_title" class="card-title lg font-display">Piso 19: Iterando un Ecosistema Phygital de Clase Mundial (V2.0)</h3>
                     <p data-i18n="piso19_desc" class="card-desc wide">
-                        Rediseño integral de la infraestructura AV y dirección de contenido para el centro de innovación C-Level de Intercorp. Migración de hardware propietario a sistemas interactivos basados en Mac Studio y previsualización en tiempo real mediante Unity/Oculus.
+                        Director de experiencia que iteró el hub C-Level de Intercorp de V1.0 a V2.0 — curación de talento, red ágil de especialistas y rediseño narrativo del Big Wow, Discover y The Pods.
                     </p>
                 </div>
                 <div class="card-media">
@@ -75,10 +75,10 @@
                 <span data-i18n="gallery_hint" class="card-hint font-mono">Ver galería →</span>
             </article>
 
-            <article class="bento-card tall span-4 project-card" data-project="fest24" tabindex="0" role="button" aria-label="FEST_24: Scaling Frictionless Logistics">
+            <article class="bento-card tall span-4 project-card" data-project="fest24" tabindex="0" role="button" data-i18n-aria="fest24_title" aria-label="FEST_24: Logística sin Fricción a Escala">
                 <div>
                     <span data-i18n="fest24_label" class="card-label font-mono">Arquitectura de Sistemas // Integración IA</span>
-                    <h3 class="card-title md font-display">FEST_24: Scaling Frictionless Logistics</h3>
+                    <h3 data-i18n="fest24_title" class="card-title md font-display">FEST_24: Logística sin Fricción a Escala</h3>
                     <p data-i18n="fest24_desc" class="card-desc">
                         Optimización masiva del registro y la comunicación interactiva para 3,000 invitados corporativos. Reemplazo de apps nativas de baja adopción por una infraestructura conversacional con IA en WhatsApp, re-adaptando tecnología de venta directa para eventos masivos.
                     </p>
@@ -94,10 +94,10 @@
                 <span data-i18n="gallery_hint" class="card-hint font-mono">Ver galería →</span>
             </article>
 
-            <article class="bento-card medium span-4 project-card" data-project="console" tabindex="0" role="button" aria-label="The Custom Anniversary Console">
+            <article class="bento-card medium span-4 project-card" data-project="console" tabindex="0" role="button" data-i18n-aria="console_title" aria-label="La Consola Personalizada de Aniversario">
                 <div>
                     <span data-i18n="console_label" class="card-label font-mono">Experimental // Computación Física</span>
-                    <h3 class="card-title md font-display">The Custom Anniversary Console</h3>
+                    <h3 data-i18n="console_title" class="card-title md font-display">La Consola Personalizada de Aniversario</h3>
                     <p data-i18n="console_desc" class="card-desc">
                         Hackeo de hardware open-source (consolas RS-36) para transformarlas en un ritual de cultura digital en La Victoria Lab. Modificación de firmware e integración de código independiente para personalizar mecánicas de juego basadas en los avatares e historias de los colaboradores.
                     </p>
@@ -113,7 +113,7 @@
                 <span data-i18n="gallery_hint" class="card-hint font-mono">Ver galería →</span>
             </article>
 
-            <article class="bento-card gradient span-8 project-card" data-project="future" tabindex="0" role="button" aria-label="Futuras Líneas de Investigación en Espacios Conectados">
+            <article class="bento-card gradient span-8 project-card" data-project="future" tabindex="0" role="button" data-i18n-aria="future_title" aria-label="Futuras Líneas de Investigación en Espacios Conectados">
                 <div>
                     <span data-i18n="future_label" class="card-label font-mono">Declaración de Investigación // Próximos Pasos</span>
                     <h3 data-i18n="future_title" class="card-title md font-display">Futuras Líneas de Investigación en Espacios Conectados</h3>
@@ -200,6 +200,10 @@
                 <button type="button" class="gallery-nav" id="gallery-next" data-i18n-aria="gallery_next" aria-label="Siguiente">→</button>
             </div>
             <div class="gallery-thumbs" id="gallery-thumbs"></div>
+            <div class="gallery-article-wrap">
+                <span data-i18n="gallery_article_label" class="gallery-article-label font-mono">Sobre el proyecto</span>
+                <div id="gallery-article" class="gallery-article"></div>
+            </div>
         </div>
     </div>
 
@@ -212,19 +216,25 @@
                 nav_narrative: 'Narrativa',
                 hero_meta: '// METADATA: LIMA, PE (GMT-5) / CANDIDATO PHYGITAL DESIGN',
                 hero_title: '<span class="hero-title-line">Diseñando</span><span class="hero-title-line">Experiencias Phygital</span><span class="hero-title-line">y <em>Narrativas Espaciales</em>.</span>',
-                hero_desc: 'Al frente del diseño de experiencias inmersivas e innovación de sistemas en Intercorp. Conectando hardware, inteligencia artificial y comportamiento humano para elevar el estándar local hacia una escala global.',
+                hero_desc: 'Al frente del diseño de experiencias inmersivas e innovación de sistemas en Intercorp. Conectando hardware, inteligencia artificial y comportamiento humano para elevar el estándar local hacia un standard global.',
                 hero_cta: 'Ver Trabajo Seleccionado ↓',
                 work_label: '[01] Proyectos Seleccionados',
                 work_title: 'Sistemas y Espacios como Contenedores Narrativos',
                 piso19_label: 'Caso Insignia // Interacción y Arquitectura AV',
-                piso19_desc: 'Rediseño integral de la infraestructura AV y dirección de contenido para el centro de innovación C-Level de Intercorp. Migración de hardware propietario a sistemas interactivos basados en Mac Studio y previsualización en tiempo real mediante Unity/Oculus.',
+                piso19_title: 'Piso 19: Iterando un Ecosistema Phygital de Clase Mundial (V2.0)',
+                piso19_desc: 'Director de experiencia que iteró el hub C-Level de Intercorp de V1.0 a V2.0 — curación de talento, red ágil de especialistas y rediseño narrativo del Big Wow, Discover y The Pods.',
                 fest24_label: 'Arquitectura de Sistemas // Integración IA',
+                fest24_title: 'FEST_24: Logística sin Fricción a Escala',
                 fest24_desc: 'Optimización masiva del registro y la comunicación interactiva para 3,000 invitados corporativos. Reemplazo de apps nativas de baja adopción por una infraestructura conversacional con IA en WhatsApp, readaptando tecnología de venta directa para eventos masivos.',
+                fest24_article: 'FEST_24 reunió a 3,000 invitados corporativos en un evento de alta complejidad logística. El reto no era solo el registro masivo, sino mantener comunicación fluida antes, durante y después del evento sin depender de apps nativas que históricamente tenían baja adopción.\n\nDiseñé e implementé una infraestructura conversacional con IA integrada en WhatsApp — un canal que los usuarios ya dominan. Readapté tecnología originalmente pensada para venta directa y la convertí en un sistema de registro, orientación y respuesta en tiempo real a escala.\n\nEl enfoque priorizó fricción cero: menos descargas, menos curvas de aprendizaje, más conversación natural. La arquitectura demostró que los sistemas de eventos masivos pueden ser tan elegantes como los de producto digital cuando se diseñan desde el comportamiento real del usuario.',
                 console_label: 'Experimental // Computación Física',
+                console_title: 'La Consola Personalizada de Aniversario',
                 console_desc: 'Hackeo de hardware open-source (consolas RS-36) para transformarlas en un ritual de cultura digital en La Victoria Lab. Modificación de firmware e integración de código independiente para personalizar mecánicas de juego basadas en los avatares e historias de los colaboradores.',
+                console_article: 'La consola de aniversario nació como experimento de cultura digital en La Victoria Lab. Partimos de hardware open-source — consolas RS-36 — y las transformamos en un ritual colectivo: cada colaborador tenía un avatar, una historia y mecánicas de juego personalizadas.\n\nEl trabajo combinó hackeo de hardware, modificación de firmware e integración de código independiente. No se trataba de una demo técnica, sino de crear un objeto físico que encarnara la memoria compartida del equipo y generara interacción genuina entre personas.\n\nEste proyecto representa mi enfoque en computación física: partir de lo tangible, modificarlo con intención narrativa y convertirlo en una experiencia que la gente recuerda porque participó activamente, no porque la observó pasivamente.',
                 future_label: 'Declaración de Investigación // Próximos Pasos',
                 future_title: 'Futuras Líneas de Investigación en Espacios Conectados',
                 future_desc: 'Mis próximos proyectos en desarrollo exploran la descentralización física del contenido mediante video-mapping espacial interactivo a gran escala (proyecciones en paredes de 10 metros), pantallas touch transparentes con propósitos de archivo físico-digital, e interfaces conversacionales adaptadas a hardware espacial.',
+                future_article: 'Esta línea de investigación explora cómo los espacios conectados pueden distribuir contenido de forma descentralizada — no en una sola pantalla central, sino a través de superficies arquitectónicas que responden al cuerpo y al contexto del visitante.\n\nLos prototipos en desarrollo incluyen video-mapping espacial interactivo a gran escala (proyecciones en paredes de 10 metros), pantallas touch transparentes que funcionan como archivo físico-digital, e interfaces conversacionales adaptadas a hardware espacial.\n\nEstas exploraciones conectan directamente con mi postulación a programas como NYU ITP, Brown/RISD MDES y Pratt/RISD IXD — buscando profundizar en narrativas espaciales donde la tecnología no compite con la arquitectura, sino que la amplifica.',
                 lab_label: '[02] El Lab',
                 lab_title: 'Notebook de Inspiración y Tendencias Globales',
                 lab_desc: 'Notas visuales y análisis de estándares de interacción tomados directamente de inmersiones en entornos de primer nivel.',
@@ -249,7 +259,8 @@
                 gallery_next: 'Siguiente',
                 gallery_video: 'Video',
                 gallery_photo: 'Foto',
-                gallery_missing: 'Coloca tu archivo en:'
+                gallery_missing: 'Coloca tu archivo en:',
+                gallery_article_label: 'Sobre el proyecto'
             },
             en: {
                 page_title: 'Dennys Luque',
@@ -258,19 +269,25 @@
                 nav_narrative: 'Narrative',
                 hero_meta: '// METADATA: LIMA, PE (GMT-5) / PHYGITAL DESIGN CANDIDATE',
                 hero_title: '<span class="hero-title-line">Designing</span><span class="hero-title-line">Phygital Experiences</span><span class="hero-title-line">and <em>Spatial Narratives</em>.</span>',
-                hero_desc: 'Leading immersive experience design and systems innovation at Intercorp. Connecting hardware, artificial intelligence, and human behavior to elevate local standards to a global scale.',
+                hero_desc: 'Leading immersive experience design and systems innovation at Intercorp. Connecting hardware, artificial intelligence, and human behavior to elevate local standards toward a global standard.',
                 hero_cta: 'View Selected Work ↓',
                 work_label: '[01] Selected Projects',
                 work_title: 'Systems and Spaces as Narrative Containers',
                 piso19_label: 'Flagship Case Study // Interaction & AV Architecture',
-                piso19_desc: 'Comprehensive redesign of AV infrastructure and content direction for Intercorp\'s C-Level innovation center. Migration from proprietary hardware to interactive Mac Studio-based systems and real-time preview via Unity/Oculus.',
+                piso19_title: 'Piso 19: Iterating a World-Class Phygital Ecosystem (V2.0)',
+                piso19_desc: 'Experience Director who iterated Intercorp\'s C-Level hub from V1.0 to V2.0 — talent curation, an agile specialist network, and narrative redesign of the Big Wow, Discover, and The Pods.',
                 fest24_label: 'System Architecture // AI Integration',
+                fest24_title: 'FEST_24: Scaling Frictionless Logistics',
                 fest24_desc: 'Mass optimization of registration and interactive communication for 3,000 corporate guests. Replacing low-adoption native apps with a conversational AI infrastructure on WhatsApp, repurposing direct-sales technology for large-scale events.',
+                fest24_article: 'FEST_24 brought together 3,000 corporate guests in a high-complexity logistical event. The challenge was not just mass registration, but maintaining fluid communication before, during, and after the event without relying on native apps that historically had low adoption.\n\nI designed and implemented a conversational AI infrastructure integrated into WhatsApp — a channel users already master. I repurposed technology originally built for direct sales and turned it into a system for registration, orientation, and real-time response at scale.\n\nThe approach prioritized zero friction: fewer downloads, fewer learning curves, more natural conversation. The architecture proved that mass-event systems can be as elegant as digital product when designed from real user behavior.',
                 console_label: 'Experimental // Physical Computing',
+                console_title: 'The Custom Anniversary Console',
                 console_desc: 'Open-source hardware hacking (RS-36 consoles) to transform them into a digital culture ritual at La Victoria Lab. Firmware modification and custom code integration to personalize game mechanics based on collaborators\' avatars and stories.',
+                console_article: 'The anniversary console started as a digital culture experiment at La Victoria Lab. We began with open-source hardware — RS-36 consoles — and transformed them into a collective ritual: each collaborator had an avatar, a story, and personalized game mechanics.\n\nThe work combined hardware hacking, firmware modification, and custom code integration. This was not a technical demo, but creating a physical object that embodied the team\'s shared memory and generated genuine interaction between people.\n\nThis project represents my approach to physical computing: start from the tangible, modify it with narrative intent, and turn it into an experience people remember because they actively participated, not because they passively watched.',
                 future_label: 'Research Statement // Next Steps',
                 future_title: 'Future Research Lines in Connected Spaces',
                 future_desc: 'My upcoming projects explore the physical decentralization of content through large-scale interactive spatial video-mapping (10-meter wall projections), transparent touch screens for physical-digital archiving, and conversational interfaces adapted to spatial hardware.',
+                future_article: 'This research line explores how connected spaces can distribute content in a decentralized way — not on a single central screen, but through architectural surfaces that respond to the visitor\'s body and context.\n\nPrototypes in development include large-scale interactive spatial video-mapping (10-meter wall projections), transparent touch screens that function as physical-digital archives, and conversational interfaces adapted to spatial hardware.\n\nThese explorations connect directly to my applications to programs like NYU ITP, Brown/RISD MDES, and Pratt/RISD IXD — seeking to deepen spatial narratives where technology does not compete with architecture, but amplifies it.',
                 lab_label: '[02] The Lab',
                 lab_title: 'Inspiration Notebook & Global Trends',
                 lab_desc: 'Visual notes and analysis of interaction standards drawn directly from immersion in top-tier environments.',
@@ -295,9 +312,122 @@
                 gallery_next: 'Next',
                 gallery_video: 'Video',
                 gallery_photo: 'Photo',
-                gallery_missing: 'Add your file at:'
+                gallery_missing: 'Add your file at:',
+                gallery_article_label: 'About the project'
             }
         };
+
+        translations.es.piso19_article_html =
+            '<header class="case-article-header">' +
+                '<dl class="case-article-meta font-mono">' +
+                    '<div><dt>Rol</dt><dd>Experience Director &amp; Product Owner</dd></div>' +
+                    '<div><dt>Partners (V1.0)</dt><dd>La Victoria Lab + Local Projects</dd></div>' +
+                    '<div><dt>Focus</dt><dd>Multizone Interaction Design, Creative Talent Curation, Agile Spatial Testing, Custom Software Architecture</dd></div>' +
+                '</dl>' +
+            '</header>' +
+            '<section class="case-article-section">' +
+                '<h4 class="case-section-label font-mono">[01 // El Contexto y el Ecosistema]</h4>' +
+                '<p>El Piso 19 nació como el hub de innovación C-Level definitivo para Intercorp, co-diseñado en su versión 1.0 por La Victoria Lab y la renombrada firma neoyorquina Local Projects. Lejos de ser una instalación aislada, el espacio fue concebido como un ecosistema interactivo complejo integrado por tres zonas principales, cada una con un propósito narrativo y tecnológico distinto:</p>' +
+                '<ul class="case-highlight-list case-zone-list">' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">The Big Wow</span>' +
+                        '<p class="case-highlight-desc">Una infraestructura monumental de 10 pantallas gigantes de 100 pulgadas sincronizadas con motores robóticos para generar diferentes posiciones físicas y coreografías visuales inmersivas.</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Discover</span>' +
+                        '<p class="case-highlight-desc">Una zona de exploración profunda compuesta por 8 pantallas touchscreen verticales que forman un timeline interactivo, complementada por una pantalla horizontal de 86 pulgadas dispuesta como mesa interactiva para explorar de forma geoespacial el mapa del impacto de Intercorp en el Perú.</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">The Pods</span>' +
+                        '<p class="case-highlight-desc">Espacios cerrados de colaboración híbrida equipados con pantallas gigantes optimizadas para dinámicas de cocreación, brainstorming y flujos de trabajo de equipos de alta dirección.</p>' +
+                    '</li>' +
+                '</ul>' +
+                '<p>Tras seis meses de la inauguración y un testeo intensivo con usuarios reales y stakeholders, asumí la dirección integral del proyecto con una misión crítica: recibir esta infraestructura de clase mundial en su V1.0 y transformarla en una plataforma viva, estable y adaptable (V2.0).</p>' +
+            '</section>' +
+            '<section class="case-article-section">' +
+                '<h4 class="case-section-label font-mono">[02 // Curation &amp; Agile Iteration Strategy (V2.0)]</h4>' +
+                '<p>Diseñar experiencias phygitales no termina el día de la entrega de obra; es ahí donde realmente empieza. Para ejecutar este nivel de iteración sin las estructuras rígidas y los altos costos de agencias tradicionales, decidí construir una red ágil de colaboradores independientes.</p>' +
+                '<p>Asumí personalmente el rol de filtro técnico y creativo, auditando y seleccionando minuciosamente al mejor talento especializado en video, código, arquitectura y storytelling. Al liderar y supervisar directamente a este equipo élite de freelancers, logramos intervenir las tres zonas con precisión quirúrgica:</p>' +
+                '<ul class="case-highlight-list case-highlight-list--compact">' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Spatial Narrative &amp; Content Overhaul</span>' +
+                        '<p class="case-highlight-desc">Rediseñamos por completo el flujo de contenido del Big Wow y las dinámicas visuales de la zona Discover. Conceptualicé y dirigí la producción de nuevos videos dinámicos de presentación corporativa y estructuré un guión museográfico optimizado para guiar y conectar emocionalmente con los visitantes durante los tours.</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Creative Coding &amp; UX Adaptations</span>' +
+                        '<p class="case-highlight-desc">Supervisé modificaciones directamente en el código base heredado de la interacción táctil en la mesa de Discover y las pantallas del timeline, optimizando el rendimiento físico, eliminando puntos de fricción e implementando micro-interacciones que mejoraron significativamente la experiencia del usuario final (UX).</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Custom Software Development</span>' +
+                        '<p class="case-highlight-desc">En lugar de depender de integraciones rígidas de terceros, coordiné el desarrollo de herramientas de software internas (in-house) a medida para explotar al máximo las capacidades físicas y las restricciones técnicas del hardware multimedia ya instalado en los Pods y pantallas principales.</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Physical &amp; Architectural Retrofitting</span>' +
+                        '<p class="case-highlight-desc">Trabajé en conjunto con arquitectos y equipos de obra civil para realizar modificaciones en la infraestructura física, alineando el diseño del entorno espacial con las nuevas demandas de flujo humano detectadas durante las sesiones de uso.</p>' +
+                    '</li>' +
+                '</ul>' +
+            '</section>' +
+            '<section class="case-article-section">' +
+                '<h4 class="case-section-label font-mono">[03 // El Impacto y Aprendizaje]</h4>' +
+                '<p>Este proceso convirtió un hito arquitectónico estático en un sistema interactivo dinámico de alta eficiencia operativa. Al descentralizar la producción mediante una red de colaboradores independientes que yo mismo recluté y gestioné, logramos estabilizar el software del ecosistema, agilizar los tiempos de actualización de contenido multimedia y democratizar el uso de hardware interactivo avanzado en el Perú.</p>' +
+                '<p>Para mí, el Piso 19 demostró que la verdadera innovación en el diseño de experiencias no radica solo en la espectacularidad tecnológica del primer día, sino en la capacidad de hackear las limitaciones técnicas del hardware, seleccionar al talento exacto para resolver problemas complejos y liderar sistemas que evolucionan con el tiempo.</p>' +
+            '</section>';
+
+        translations.en.piso19_article_html =
+            '<header class="case-article-header">' +
+                '<dl class="case-article-meta font-mono">' +
+                    '<div><dt>Role</dt><dd>Experience Director &amp; Product Owner</dd></div>' +
+                    '<div><dt>Partners (V1.0)</dt><dd>La Victoria Lab + Local Projects</dd></div>' +
+                    '<div><dt>Focus</dt><dd>Multizone Interaction Design, Creative Talent Curation, Agile Spatial Testing, Custom Software Architecture</dd></div>' +
+                '</dl>' +
+            '</header>' +
+            '<section class="case-article-section">' +
+                '<h4 class="case-section-label font-mono">[01 // Context &amp; Ecosystem]</h4>' +
+                '<p>Piso 19 was born as Intercorp\'s definitive C-Level innovation hub, co-designed in its V1.0 by La Victoria Lab and the renowned New York firm Local Projects. Far from being an isolated installation, the space was conceived as a complex interactive ecosystem built around three main zones, each with a distinct narrative and technological purpose:</p>' +
+                '<ul class="case-highlight-list case-zone-list">' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">The Big Wow</span>' +
+                        '<p class="case-highlight-desc">A monumental infrastructure of 10 synchronized 100-inch giant screens with robotic motors to generate different physical positions and immersive visual choreographies.</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Discover</span>' +
+                        '<p class="case-highlight-desc">A deep exploration zone composed of 8 vertical touchscreen displays forming an interactive timeline, complemented by an 86-inch horizontal screen configured as an interactive table to geospatially explore Intercorp\'s impact map across Peru.</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">The Pods</span>' +
+                        '<p class="case-highlight-desc">Enclosed hybrid collaboration spaces equipped with giant screens optimized for co-creation dynamics, brainstorming, and executive team workflows.</p>' +
+                    '</li>' +
+                '</ul>' +
+                '<p>After six months from inauguration and intensive testing with real users and stakeholders, I assumed full project direction with a critical mission: inherit this world-class infrastructure in its V1.0 and transform it into a living, stable, and adaptable platform (V2.0).</p>' +
+            '</section>' +
+            '<section class="case-article-section">' +
+                '<h4 class="case-section-label font-mono">[02 // Curation &amp; Agile Iteration Strategy (V2.0)]</h4>' +
+                '<p>Designing phygital experiences does not end on handover day; that is where it truly begins. To execute this level of iteration without the rigid structures and high costs of traditional agencies, I chose to build an agile network of independent collaborators.</p>' +
+                '<p>I personally assumed the role of technical and creative filter, meticulously auditing and selecting the best specialized talent in video, code, architecture, and storytelling. By directly leading and supervising this elite freelancer team, we intervened across all three zones with surgical precision:</p>' +
+                '<ul class="case-highlight-list case-highlight-list--compact">' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Spatial Narrative &amp; Content Overhaul</span>' +
+                        '<p class="case-highlight-desc">We fully redesigned the Big Wow content flow and Discover\'s visual dynamics. I conceptualized and directed the production of new dynamic corporate presentation videos and structured an optimized museographic script to guide and emotionally connect with visitors during tours.</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Creative Coding &amp; UX Adaptations</span>' +
+                        '<p class="case-highlight-desc">I supervised modifications directly in the inherited codebase for Discover\'s table interaction and timeline screens, optimizing physical performance, removing friction points, and implementing micro-interactions that significantly improved end-user experience (UX).</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Custom Software Development</span>' +
+                        '<p class="case-highlight-desc">Instead of relying on rigid third-party integrations, I coordinated the development of bespoke in-house software tools to maximize the physical capabilities and technical constraints of the multimedia hardware already installed in the Pods and main screens.</p>' +
+                    '</li>' +
+                    '<li class="case-highlight-item">' +
+                        '<span class="case-highlight-name font-display">Physical &amp; Architectural Retrofitting</span>' +
+                        '<p class="case-highlight-desc">I worked alongside architects and civil construction teams to modify physical infrastructure, aligning spatial environment design with new human flow demands detected during usage sessions.</p>' +
+                    '</li>' +
+                '</ul>' +
+            '</section>' +
+            '<section class="case-article-section">' +
+                '<h4 class="case-section-label font-mono">[03 // Impact &amp; Learning]</h4>' +
+                '<p>This process turned a static architectural milestone into a dynamic interactive system with high operational efficiency. By decentralizing production through a network of independent collaborators I personally recruited and managed, we stabilized the ecosystem software, accelerated multimedia content update cycles, and democratized the use of advanced interactive hardware in Peru.</p>' +
+                '<p>For me, Piso 19 proved that true innovation in experience design lies not only in opening-day technological spectacle, but in the ability to hack hardware technical limitations, select the exact talent to solve complex problems, and lead systems that evolve over time.</p>' +
+            '</section>';
 
         var currentLang = 'es';
 
@@ -393,7 +523,7 @@
 
         var projectGalleries = {
             piso19: {
-                title: 'Piso 19: The Immersive Corporate Hub',
+                title: 'Piso 19: Iterating a World-Class Phygital Ecosystem (V2.0)',
                 items: [
                     { type: 'video', src: 'media/piso19/video.mp4', poster: 'media/piso19/photo-1.jpeg' },
                     { type: 'image', src: 'media/piso19/photo-1.jpeg', alt: 'Piso 19 — foto 1' },
@@ -449,6 +579,7 @@
         var galleryThumbs = document.getElementById('gallery-thumbs');
         var galleryPrev = document.getElementById('gallery-prev');
         var galleryNext = document.getElementById('gallery-next');
+        var galleryArticle = document.getElementById('gallery-article');
 
         function t(key) {
             var strings = translations[currentLang];
@@ -460,6 +591,30 @@
             for (var i = 0; i < ariaNodes.length; i++) {
                 var node = ariaNodes[i];
                 node.setAttribute('aria-label', t(node.getAttribute('data-i18n-aria')));
+            }
+        }
+
+        function renderGalleryArticle(projectId) {
+            if (!galleryArticle || !projectId) return;
+
+            var htmlKey = projectId + '_article_html';
+            if (translations[currentLang][htmlKey]) {
+                galleryArticle.innerHTML = t(htmlKey);
+                return;
+            }
+
+            var text = t(projectId + '_article');
+            if (!text || text === projectId + '_article') {
+                galleryArticle.innerHTML = '';
+                return;
+            }
+
+            var paragraphs = text.split('\n\n');
+            galleryArticle.innerHTML = '';
+            for (var i = 0; i < paragraphs.length; i++) {
+                var paragraph = document.createElement('p');
+                paragraph.textContent = paragraphs[i];
+                galleryArticle.appendChild(paragraph);
             }
         }
 
@@ -559,6 +714,7 @@
             galleryTitle.textContent = titleEl ? titleEl.textContent : project.title;
             buildGalleryThumbs(project.items);
             renderGallerySlide(0);
+            renderGalleryArticle(projectId);
 
             galleryModal.hidden = false;
             galleryModal.setAttribute('aria-hidden', 'false');
@@ -573,6 +729,7 @@
             document.body.classList.remove('gallery-open');
             galleryStage.innerHTML = '';
             galleryThumbs.innerHTML = '';
+            galleryArticle.innerHTML = '';
         }
 
         function stepGallery(direction) {
@@ -659,6 +816,10 @@
             }
 
             if (!galleryModal.hidden && galleryState.items.length) {
+                if (galleryState.projectId) {
+                    galleryTitle.textContent = t(galleryState.projectId + '_title');
+                    renderGalleryArticle(galleryState.projectId);
+                }
                 buildGalleryThumbs(galleryState.items);
                 renderGallerySlide(galleryState.index);
             }

@@ -718,6 +718,136 @@ body.gallery-open {
     text-transform: uppercase;
 }
 
+.gallery-article-wrap {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+.gallery-article-label {
+    display: block;
+    font-size: 10px;
+    color: #737373;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+}
+
+.gallery-article {
+    color: #525252;
+    font-size: 0.875rem;
+    line-height: 1.7;
+}
+
+.gallery-article p {
+    margin: 0 0 1rem;
+}
+
+.gallery-article p:last-child {
+    margin-bottom: 0;
+}
+
+.case-article-header {
+    margin-bottom: 1.5rem;
+}
+
+.case-article-meta {
+    display: grid;
+    gap: 0.625rem;
+    margin: 0;
+    padding: 1rem 1.125rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.75rem;
+    background: #fafafa;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+}
+
+.case-article-meta div {
+    display: grid;
+    gap: 0.125rem;
+}
+
+.case-article-meta dt {
+    color: #a3a3a3;
+    text-transform: uppercase;
+}
+
+.case-article-meta dd {
+    margin: 0;
+    color: #404040;
+    line-height: 1.5;
+}
+
+.case-article-section {
+    margin-top: 1.75rem;
+}
+
+.case-article-section:first-child {
+    margin-top: 0;
+}
+
+.case-section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #737373;
+    margin: 0 0 0.875rem;
+}
+
+.case-highlight-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.case-highlight-item {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.875rem;
+    padding: 1rem 1.125rem;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.case-highlight-item:hover {
+    border-color: #d4d4d4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.case-highlight-name {
+    display: block;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #171717;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+}
+
+.case-highlight-desc {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    color: #525252;
+}
+
+.case-highlight-list--compact {
+    margin-top: 1rem;
+}
+
+.case-zone-list .case-highlight-item {
+    background: linear-gradient(to bottom right, #fafafa, #fff);
+    border-color: #d4d4d4;
+}
+
+.case-zone-list .case-highlight-name {
+    font-size: 1rem;
+}
+
 @media (max-width: 640px) {
     .gallery-dialog {
         padding: 1rem;
