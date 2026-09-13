@@ -32,8 +32,10 @@ es el que sirve para planear la compra semanal.
 
 1. **Diario 8am y domingo 6pm** – Schedule Trigger con dos reglas (zona horaria America/Lima).
 2. **Definir modo** – decide `diario` / `semana` / `mes` según hora y día.
-3. **Listar fuentes** → **Traer paginas** – lee 13 páginas oficiales (Interbank, BCP, Tarjeta Oh!,
-   Vivanda, Wong, Flora & Fauna). Si una falla, se anota y el flujo sigue.
+3. **Listar fuentes** → **Traer paginas** → **Traer paginas (lector)** – lee 13 páginas oficiales
+   (Interbank, BCP, Tarjeta Oh!, Vivanda, Wong, Flora & Fauna). Interbank y BCP responden 403 al
+   HTTP directo, así que hay una segunda lectura por el lector público r.jina.ai. Si ambas fallan,
+   se anota y el modelo busca la página en la web.
 4. **Correos de Dennys / Correos de Akemi** – Gmail: correos de los bancos y tiendas de los últimos 12
    días. Ahí suele llegar el enlace de inscripción de las campañas.
 5. **Consolidar fuentes** – convierte el HTML a texto plano y junta todo.

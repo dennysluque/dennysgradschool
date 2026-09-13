@@ -114,6 +114,54 @@ const traerPaginas = node({
   output: [{ statusCode: 200, body: '<html>...</html>', headers: {} }]
 });
 
+const listarFuentesLector = node({
+  type: 'n8n-nodes-base.code',
+  version: 2,
+  config: {
+    name: 'Listar fuentes (lector)',
+    parameters: {
+      mode: 'runOnceForAllItems',
+      language: 'javaScript',
+      jsCode: `
+// Interbank y BCP bloquean las lecturas directas (HTTP 403). Segundo intento con el
+// lector publico r.jina.ai, que renderiza la pagina y devuelve texto plano.
+return $('Listar fuentes').all().map(function (it) {
+  return { json: { etiqueta: it.json.etiqueta, url_lector: 'https://r.jina.ai/' + it.json.url } };
+});
+`
+    }
+  },
+  output: [{ etiqueta: 'Interbank - Beneficios Amex', url_lector: 'https://r.jina.ai/https://interbank.pe/promociones/descuentos/beneficios-amex' }]
+});
+
+const traerPaginasLector = node({
+  type: 'n8n-nodes-base.httpRequest',
+  version: 4.4,
+  config: {
+    name: 'Traer paginas (lector)',
+    onError: 'continueRegularOutput',
+    parameters: {
+      method: 'GET',
+      url: expr('{{ $json.url_lector }}'),
+      sendHeaders: true,
+      specifyHeaders: 'keypair',
+      headerParameters: {
+        parameters: [
+          { name: 'Accept', value: 'text/plain' },
+          { name: 'X-Return-Format', value: 'text' },
+          { name: 'X-Timeout', value: '25' }
+        ]
+      },
+      options: {
+        timeout: 45000,
+        batching: { batch: { batchSize: 2, batchInterval: 4000 } },
+        response: { response: { responseFormat: 'text', outputPropertyName: 'html', neverError: true, fullResponse: true } }
+      }
+    }
+  },
+  output: [{ statusCode: 200, body: 'Title: ... Markdown Content: ...', headers: {} }]
+});
+
 const correosDennys = node({
   type: 'n8n-nodes-base.gmail',
   version: 2.2,
@@ -129,7 +177,7 @@ const correosDennys = node({
       limit: 12,
       simple: false,
       filters: {
-        q: 'newer_than:12d from:(interbank OR viabcp OR bcp OR tarjetaoh OR "financiera oh" OR wong OR vivanda OR florayfauna) (supermercado OR supermercados OR Wong OR Vivanda OR "Flora" OR cashback OR devolución OR descuento)',
+        q: 'newer_than:12d from:(interbank OR viabcp OR bcp OR tarjetaoh OR "financiera oh" OR wong OR vivanda OR florayfauna) subject:(promo OR promoción OR promociones OR cashback OR devolución OR descuento OR beneficio OR beneficios OR supermercado OR Wong OR Vivanda OR Flora OR inscríbete OR inscripción) -subject:(consumo OR constancia OR transferencia OR "estado de cuenta" OR "pago realizado" OR contraseña OR clave)',
         readStatus: 'both'
       },
       options: {}
@@ -154,7 +202,7 @@ const correosAkemi = node({
       limit: 12,
       simple: false,
       filters: {
-        q: 'newer_than:12d from:(interbank OR viabcp OR bcp OR tarjetaoh OR "financiera oh" OR wong OR vivanda OR florayfauna) (supermercado OR supermercados OR Wong OR Vivanda OR "Flora" OR cashback OR devolución OR descuento)',
+        q: 'newer_than:12d from:(interbank OR viabcp OR bcp OR tarjetaoh OR "financiera oh" OR wong OR vivanda OR florayfauna) subject:(promo OR promoción OR promociones OR cashback OR devolución OR descuento OR beneficio OR beneficios OR supermercado OR Wong OR Vivanda OR Flora OR inscríbete OR inscripción) -subject:(consumo OR constancia OR transferencia OR "estado de cuenta" OR "pago realizado" OR contraseña OR clave)',
         readStatus: 'both'
       },
       options: {}
@@ -175,7 +223,9 @@ const consolidarFuentes = node({
       jsCode: `
 const modo = $('Definir modo').first().json;
 const fuentes = $('Listar fuentes').all();
-const paginas = $('Traer paginas').all();
+const directas = $('Traer paginas').all();
+let lector = [];
+try { lector = $('Traer paginas (lector)').all(); } catch (e) { lector = []; }
 
 function aTexto(html) {
   let s = String(html || '');
@@ -195,22 +245,31 @@ function aTexto(html) {
   return s.trim();
 }
 
-// Cada pagina llega en el mismo orden en que se listo. Guardamos texto plano
-// recortado: lo que importa son montos, dias y condiciones, no el HTML.
+// Cada fuente tiene dos lecturas (directa y por el lector) en el mismo orden en que
+// se listo. Se queda con la mas larga que haya respondido bien; si ninguna sirve,
+// se anota como caida y el modelo la busca en la web.
 const LIMITE = 7000;
 const fuentesTexto = [];
 const caidas = [];
 for (let i = 0; i < fuentes.length; i++) {
   const f = fuentes[i].json;
-  const r = (paginas[i] && paginas[i].json) || {};
-  const status = Number(r.statusCode || (r.error ? 0 : 200));
-  const html = r.body != null ? r.body : (r.html != null ? r.html : (r.data != null ? r.data : ''));
-  const texto = aTexto(html);
-  if (status >= 400 || status === 0 || texto.length < 200) {
-    caidas.push(f.etiqueta + (status ? ' (HTTP ' + status + ')' : ' (sin respuesta)'));
+  const candidatos = [];
+  for (const lista of [directas, lector]) {
+    const r = (lista[i] && lista[i].json) || {};
+    const status = Number(r.statusCode || (r.error ? 0 : 200));
+    const cuerpo = r.body != null ? r.body : (r.html != null ? r.html : (r.data != null ? r.data : ''));
+    candidatos.push({ status: status, texto: aTexto(cuerpo) });
+  }
+  let mejor = null;
+  for (const c of candidatos) {
+    if (c.status >= 400 || c.status === 0 || c.texto.length < 200) continue;
+    if (!mejor || c.texto.length > mejor.texto.length) mejor = c;
+  }
+  if (!mejor) {
+    caidas.push(f.etiqueta + ' (HTTP ' + candidatos.map(function (c) { return c.status || 'sin respuesta'; }).join('/') + ')');
     continue;
   }
-  fuentesTexto.push({ banco: f.banco, etiqueta: f.etiqueta, url: f.url, texto: texto.slice(0, LIMITE) });
+  fuentesTexto.push({ banco: f.banco, etiqueta: f.etiqueta, url: f.url, texto: mejor.texto.slice(0, LIMITE) });
 }
 
 function correosDe(nombreNodo, dueno) {
@@ -325,21 +384,25 @@ const SYSTEM_PROMPT =
   '1) BCP Visa Infinite Sapphire LATAM Pass. Aplican promos que digan "Visa BCP", "tarjetas de crédito BCP", "Visa Infinite BCP" o "Sapphire". NO aplican promos exclusivas de American Express BCP ni de débito BCP.\n' +
   '2) Interbank American Express (tarjeta de crédito). Aplican promos que digan "Amex Interbank", "American Express Interbank" o "tarjetas de crédito Interbank" en general. NO aplican promos exclusivas de Visa Interbank, Mastercard Interbank, Cuenta Sueldo o débito, salvo que el texto diga que aplica a todas las tarjetas de crédito. Si una promo depende de Cuenta Sueldo Interbank, inclúyela pero dilo claro en requisitos.\n' +
   '3) Tarjeta Oh! de Financiera Oh! (grupo Intercorp). Es aceptada en Vivanda y plazaVea (ambas de Supermercados Peruanos, Intercorp). Sus descuentos de "supermercado" suelen aplicar en plazaVea y Vivanda: inclúyelos y en tienda pon "Vivanda" si el texto lo confirma o "Vivanda (confirmar)" si solo menciona plazaVea.\n' +
+  'No asumas a nombre de quién está cada tarjeta ni inventes datos personales: describe la tarjeta, no a la persona.\n' +
   '\n' +
   'TIENDAS QUE NOS INTERESAN: Wong y Vivanda (las tenemos cerca de casa) y Flora & Fauna. Compramos online en wong.pe, vivanda.com.pe y florayfauna.pe solo productos envasados o sellados; los frescos (pollo, carnes, frutas, verduras, pan) siempre en tienda física.\n' +
   '\n' +
   'REGLAS:\n' +
   '- Incluye una promo solo si aplica a alguna de nuestras tarjetas y a Wong, Vivanda o Flora & Fauna (o a "supermercados" en general incluyendo alguna de ellas).\n' +
+  '- VIGENCIA: incluye una promo solo si tienes evidencia de que está vigente hoy o durante el mes en curso: fechas del mes actual en el texto, un correo reciente del banco, o un beneficio permanente (ej. Precios Oh!). Si lo único que encuentras son términos y condiciones de un mes o un año anterior, NO la pongas en promos; menciónala brevemente en notas como "posible renovación, sin confirmar".\n' +
   '- Ignora promos de otros bancos (BBVA, Scotiabank, Diners, Ripley, Falabella, Cencosud, etc.) y de otras tiendas (Metro, Tottus, plazaVea sola, Makro) salvo que la misma promo incluya Wong o Vivanda.\n' +
   '- Ignora promos que no sean de compras de supermercado (restaurantes, viajes, electro, moda).\n' +
+  '- Los correos de notificación de consumos, constancias de pago o transferencias NO son promociones: ignóralos.\n' +
   '- Ignora promos vencidas. Si la vigencia no está clara, pon vigencia_fin null y confianza "media" o "baja".\n' +
   '- Muchas promos de Interbank y BCP exigen INSCRIPCIÓN previa (registrarse en un enlace o en la app). Detéctalo siempre y pon el enlace si existe.\n' +
   '- Si la promo aparece en una promo ya registrada (lista que te doy), copia su clave en clave_existente; si es nueva, deja clave_existente en null.\n' +
   '- No repitas la misma promo dos veces. Si hay dos niveles de un mismo beneficio (ej. S/50 desde S/350 y S/100 desde S/500), es UNA sola promo con ambos niveles en beneficio.\n' +
   '- Prefiere la información de los correos y páginas oficiales de hoy sobre lo que recuerdes de tu entrenamiento.\n' +
+  '- En "dias" escribe solo el día o días (ej. "jueves", "lunes y miércoles", "todos los días"); las aclaraciones van en requisitos o notas.\n' +
   '\n' +
   'FORMATO DE SALIDA: responde SOLO con un bloque JSON (sin texto antes ni después) con esta forma exacta:\n' +
-  '{"promos":[{"clave_existente":null,"banco":"Interbank|BCP|Financiera Oh","tarjeta":"texto corto de qué tarjeta aplica","tienda":"Wong|Vivanda|Flora & Fauna|Wong y Vivanda|Supermercados varios","titulo":"nombre corto","beneficio":"qué te dan, con montos","dias":"jueves|lunes y miércoles|todos los días|...","dias_semana":[4],"vigencia_inicio":"YYYY-MM-DD o null","vigencia_fin":"YYYY-MM-DD o null","requisitos":"monto mínimo, categorías, topes, exclusiones","inscripcion":"No|Sí: cómo y dónde (enlace)","canal":"tienda|online|ambos","aplica_frescos":true,"url":"enlace oficial","confianza":"alta|media|baja","fuente":"correo|pagina|busqueda"}],"notas":"observaciones breves (promos dudosas, cambios, avisos de fin de mes)"}\n' +
+  '{"promos":[{"clave_existente":null,"banco":"Interbank|BCP|Financiera Oh","tarjeta":"texto corto de qué tarjeta aplica","tienda":"Wong|Vivanda|Flora & Fauna|Wong y Vivanda|Supermercados varios","titulo":"nombre corto","beneficio":"qué te dan, con montos","dias":"jueves|lunes y miércoles|todos los días|...","dias_semana":[4],"vigencia_inicio":"YYYY-MM-DD o null","vigencia_fin":"YYYY-MM-DD o null","requisitos":"monto mínimo, categorías, topes, exclusiones","inscripcion":"No|Sí: cómo y dónde (enlace)","canal":"tienda|online|ambos","aplica_frescos":true,"url":"enlace oficial","confianza":"alta|media|baja","fuente":"correo|pagina|busqueda"}],"notas":"observaciones breves (promos dudosas, posibles renovaciones sin confirmar, avisos de fin de mes)"}\n' +
   'dias_semana usa 1=lunes ... 7=domingo; lista vacía [] si aplica todos los días.\n';
 
 const buscarPromos = node({
@@ -398,10 +461,16 @@ function norm(s) {
   return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 }
 function slug(s) { return norm(s).replace(/\\s+/g, '-'); }
-function claveDe(p) {
+// La clave identifica una promo entre corridas: banco, tienda, dias de la semana,
+// los montos que aparecen en el beneficio y la fecha de fin. Nada de texto libre,
+// para que una redaccion distinta del modelo no la convierta en "nueva".
+function claveDe(p, dias) {
   const nums = (String(p.beneficio || '') + ' ' + String(p.requisitos || '')).match(/\\d+(?:[.,]\\d+)?/g) || [];
-  const numsOrd = nums.map(function (n) { return n.replace(',', '.'); }).sort().join('-');
-  return [slug(p.banco), slug(p.tienda), slug(p.dias), numsOrd, p.vigencia_fin || 'sin-fin'].join('|');
+  const unicos = [];
+  for (const n of nums) { const v = n.replace(',', '.'); if (unicos.indexOf(v) < 0) unicos.push(v); }
+  const numsOrd = unicos.sort().slice(0, 6).join('-');
+  const diasTxt = dias.length ? dias.slice().sort().join('') : 'todos';
+  return [slug(p.banco), slug(p.tienda), diasTxt, numsOrd, p.vigencia_fin || 'sin-fin'].join('|');
 }
 
 const clavesConocidas = new Set(conocidas.map(function (c) { return c.clave; }));
@@ -412,10 +481,10 @@ for (const p of lista) {
   const tiendaN = norm(p.tienda);
   if (!/wong|vivanda|flora|supermercado/.test(tiendaN)) continue;
   if (p.vigencia_fin && p.vigencia_fin < ctx.hoy) continue;
-  const clave = (p.clave_existente && clavesConocidas.has(p.clave_existente)) ? p.clave_existente : claveDe(p);
+  const dias = Array.isArray(p.dias_semana) ? p.dias_semana.map(Number).filter(function (d) { return d >= 1 && d <= 7; }) : [];
+  const clave = (p.clave_existente && clavesConocidas.has(p.clave_existente)) ? p.clave_existente : claveDe(p, dias);
   if (vistas.has(clave)) continue;
   vistas.add(clave);
-  const dias = Array.isArray(p.dias_semana) ? p.dias_semana.map(Number).filter(function (d) { return d >= 1 && d <= 7; }) : [];
   promos.push({
     clave: clave,
     banco: String(p.banco || ''),
@@ -700,8 +769,8 @@ const notaFuentes = sticky(
   '### Fuentes\n' +
   '- **Listar fuentes**: URLs oficiales; agrega o quita líneas ahí.\n' +
   '- **Correos**: busca en Gmail (Dennys y Akemi) correos de Interbank/BCP/Oh!/tiendas de los últimos 12 días; ahí llega el enlace de inscripción.\n' +
-  '- Si una página falla, no se cae el flujo: el modelo la busca en la web.',
-  [traerPaginas, correosDennys, correosAkemi],
+  '- Interbank y BCP bloquean el HTTP directo (403): hay una segunda lectura vía r.jina.ai. Si ambas fallan, el modelo la busca en la web.',
+  [traerPaginas, listarFuentesLector, traerPaginasLector, correosDennys, correosAkemi],
   { color: 5 }
 );
 
@@ -712,6 +781,8 @@ export default workflow('cazador-promos-supermercado', 'Cazador de promos de sup
   .to(definirModo)
   .to(listarFuentes)
   .to(traerPaginas)
+  .to(listarFuentesLector)
+  .to(traerPaginasLector)
   .to(correosDennys)
   .to(correosAkemi)
   .to(consolidarFuentes)
