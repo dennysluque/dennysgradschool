@@ -383,10 +383,11 @@ const SYSTEM_PROMPT =
   'NUESTRAS TARJETAS (solo estas cuentan):\n' +
   '1) BCP Visa Infinite Sapphire LATAM Pass. Aplican promos que digan "Visa BCP", "tarjetas de crédito BCP", "Visa Infinite BCP" o "Sapphire". NO aplican promos exclusivas de American Express BCP ni de débito BCP.\n' +
   '2) Interbank American Express (tarjeta de crédito). Aplican promos que digan "Amex Interbank", "American Express Interbank" o "tarjetas de crédito Interbank" en general. NO aplican promos exclusivas de Visa Interbank, Mastercard Interbank, Cuenta Sueldo o débito, salvo que el texto diga que aplica a todas las tarjetas de crédito. Si una promo depende de Cuenta Sueldo Interbank, inclúyela pero dilo claro en requisitos.\n' +
-  '3) Tarjeta Oh! de Financiera Oh! (grupo Intercorp). Es aceptada en Vivanda y plazaVea (ambas de Supermercados Peruanos, Intercorp). Sus descuentos de "supermercado" suelen aplicar en plazaVea y Vivanda: inclúyelos y en tienda pon "Vivanda" si el texto lo confirma o "Vivanda (confirmar)" si solo menciona plazaVea.\n' +
+  '3) Tarjeta SIP de Financiera Oh! (grupo Intercorp). Es la versión actualizada de la Tarjeta Oh!, así que las promos publicadas como "Tarjeta Oh!", "oh!" o "SIP" aplican. Es aceptada en Vivanda y plazaVea (ambas de Supermercados Peruanos, Intercorp). Sus descuentos de "supermercado" suelen aplicar en plazaVea y Vivanda: inclúyelos y en tienda pon "Vivanda" si el texto lo confirma o "Vivanda (confirmar)" si solo menciona plazaVea. En los textos llámala "Tarjeta SIP (antes Oh!)".\n' +
   'No asumas a nombre de quién está cada tarjeta ni inventes datos personales: describe la tarjeta, no a la persona.\n' +
   '\n' +
   'TIENDAS QUE NOS INTERESAN: Wong y Vivanda (las tenemos cerca de casa) y Flora & Fauna. Compramos online en wong.pe, vivanda.com.pe y florayfauna.pe solo productos envasados o sellados; los frescos (pollo, carnes, frutas, verduras, pan) siempre en tienda física.\n' +
+  'CÓMO COMPRAMOS: la compra grande de la semana es en persona los VIERNES. Solo cambiaríamos de día si una promo lo justifica. En Vivanda ya aplicamos siempre tres descuentos: descuento de colaborador Intercorp, cupón y Tarjeta SIP; por eso en Vivanda interesan sobre todo las promos ADICIONALES a eso y saber si son acumulables.\n' +
   '\n' +
   'REGLAS:\n' +
   '- Incluye una promo solo si aplica a alguna de nuestras tarjetas y a Wong, Vivanda o Flora & Fauna (o a "supermercados" en general incluyendo alguna de ellas).\n' +
@@ -400,9 +401,11 @@ const SYSTEM_PROMPT =
   '- No repitas la misma promo dos veces. Si hay dos niveles de un mismo beneficio (ej. S/50 desde S/350 y S/100 desde S/500), es UNA sola promo con ambos niveles en beneficio.\n' +
   '- Prefiere la información de los correos y páginas oficiales de hoy sobre lo que recuerdes de tu entrenamiento.\n' +
   '- En "dias" escribe solo el día o días (ej. "jueves", "lunes y miércoles", "todos los días"); las aclaraciones van en requisitos o notas.\n' +
+  '- "importante": true solo si la promo justificaría mover la compra semanal del viernes a otro día: descuento de 10% o más, o devolución de S/30 o más en una compra típica de supermercado. Los beneficios permanentes que ya usamos (Precios Oh!/SIP) no son importantes.\n' +
+  '- "acumulable": si la promo se puede sumar al descuento de colaborador Intercorp y a cupones. Si los términos dicen "no acumulable con otras promociones o descuentos", pon "no"; si lo permiten explícitamente, "sí"; si no lo mencionan, "no dice".\n' +
   '\n' +
   'FORMATO DE SALIDA: responde SOLO con un bloque JSON (sin texto antes ni después) con esta forma exacta:\n' +
-  '{"promos":[{"clave_existente":null,"banco":"Interbank|BCP|Financiera Oh","tarjeta":"texto corto de qué tarjeta aplica","tienda":"Wong|Vivanda|Flora & Fauna|Wong y Vivanda|Supermercados varios","titulo":"nombre corto","beneficio":"qué te dan, con montos","dias":"jueves|lunes y miércoles|todos los días|...","dias_semana":[4],"vigencia_inicio":"YYYY-MM-DD o null","vigencia_fin":"YYYY-MM-DD o null","requisitos":"monto mínimo, categorías, topes, exclusiones","inscripcion":"No|Sí: cómo y dónde (enlace)","canal":"tienda|online|ambos","aplica_frescos":true,"url":"enlace oficial","confianza":"alta|media|baja","fuente":"correo|pagina|busqueda"}],"notas":"observaciones breves (promos dudosas, posibles renovaciones sin confirmar, avisos de fin de mes)"}\n' +
+  '{"promos":[{"clave_existente":null,"banco":"Interbank|BCP|Financiera Oh","tarjeta":"texto corto de qué tarjeta aplica","tienda":"Wong|Vivanda|Flora & Fauna|Wong y Vivanda|Supermercados varios","titulo":"nombre corto","beneficio":"qué te dan, con montos","dias":"jueves|lunes y miércoles|todos los días|...","dias_semana":[4],"vigencia_inicio":"YYYY-MM-DD o null","vigencia_fin":"YYYY-MM-DD o null","requisitos":"monto mínimo, categorías, topes, exclusiones","inscripcion":"No|Sí: cómo y dónde (enlace)","canal":"tienda|online|ambos","aplica_frescos":true,"url":"enlace oficial","confianza":"alta|media|baja","fuente":"correo|pagina|busqueda","importante":false,"acumulable":"sí|no|no dice"}],"notas":"observaciones breves (promos dudosas, posibles renovaciones sin confirmar, avisos de fin de mes)"}\n' +
   'dias_semana usa 1=lunes ... 7=domingo; lista vacía [] si aplica todos los días.\n';
 
 const buscarPromos = node({
@@ -503,6 +506,8 @@ for (const p of lista) {
     url: String(p.url || ''),
     confianza: String(p.confianza || 'media'),
     fuente: String(p.fuente || ''),
+    importante: p.importante === true,
+    acumulable: String(p.acumulable || 'no dice'),
     es_nueva: !clavesConocidas.has(clave)
   });
 }
@@ -538,7 +543,10 @@ const armarMensaje = node({
 const d = $input.first().json;
 const NL = String.fromCharCode(10);
 const DIAS = ['', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+// Dia habitual de la compra grande en persona (1=lunes ... 7=domingo).
+const DIA_COMPRAS = 5;
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 function fechaCorta(iso) {
   if (!iso) return '';
   const m = String(iso).match(/^(\\d{4})-(\\d{2})-(\\d{2})/);
@@ -553,20 +561,25 @@ function icono(tienda) {
   if (t.indexOf('wong') >= 0) return '🛒';
   return '🏬';
 }
+function esVivanda(p) { return String(p.tienda).toLowerCase().indexOf('vivanda') >= 0; }
 function requiereInscripcion(p) { return /^s[ií]/i.test(String(p.inscripcion || '')); }
+function textoInscripcion(p) { return esc(String(p.inscripcion || '').replace(/^s[ií]\\s*[:.-]?\\s*/i, '')); }
 function canalTexto(p) {
   if (p.canal === 'online') return 'solo online (envasados)';
   if (p.canal === 'tienda') return 'solo en tienda';
   return 'tienda y online';
 }
+function aplicaDia(p, dia) { return !p.dias_semana.length || p.dias_semana.indexOf(dia) >= 0; }
+function resumen(p) { return esc(p.tienda) + ' con ' + esc(p.tarjeta) + ' (' + esc(p.beneficio) + ')' + (p.importante ? ' ⭐' : ''); }
 function fichaPromo(p, detallada) {
-  let s = icono(p.tienda) + ' <b>' + esc(p.tienda) + '</b> · ' + esc(p.tarjeta) + NL;
+  let s = icono(p.tienda) + ' <b>' + esc(p.tienda) + '</b> · ' + esc(p.tarjeta) + (p.importante ? ' ⭐' : '') + NL;
   s += '   💸 ' + esc(p.beneficio) + NL;
   s += '   📅 ' + esc(p.dias || 'todos los días');
   if (p.vigencia_fin) s += ' · hasta el ' + fechaCorta(p.vigencia_fin);
   s += NL;
   if (detallada && p.requisitos) s += '   📋 ' + esc(p.requisitos) + NL;
-  if (requiereInscripcion(p)) s += '   ⚠️ <b>Requiere inscripción:</b> ' + esc(p.inscripcion.replace(/^s[ií]\\s*[:.-]?\\s*/i, '')) + NL;
+  if (requiereInscripcion(p)) s += '   ⚠️ <b>Requiere inscripción:</b> ' + textoInscripcion(p) + NL;
+  if (detallada && esVivanda(p)) s += '   🧾 Acumulable con colaborador Intercorp y cupón: ' + esc(p.acumulable || 'no dice') + NL;
   if (detallada) s += '   🛍 ' + canalTexto(p) + (p.aplica_frescos ? '' : ' · no aplica a frescos') + NL;
   if (p.confianza === 'baja') s += '   ❓ confianza baja, verificar antes de ir' + NL;
   if (p.url) s += '   🔗 ' + esc(p.url) + NL;
@@ -582,29 +595,40 @@ const notas = d.modo === 'diario' && notasLargas.length > 900 ? notasLargas.slic
 
 if (d.modo === 'semana') {
   let m = '<b>🛒 Plan de compras de la semana</b>' + NL;
-  m += 'Promos vigentes para Wong, Vivanda y Flora &amp; Fauna con tus tarjetas (BCP Sapphire, Amex Interbank, Tarjeta Oh!).' + NL + NL;
+  m += 'Promos vigentes para Wong, Vivanda y Flora &amp; Fauna con tus tarjetas (BCP Sapphire, Amex Interbank, Tarjeta SIP).' + NL + NL;
   if (!promos.length) {
-    m += 'No encontré ninguna promo vigente esta semana para nuestras tarjetas. Compra el día que te acomode.' + NL;
+    m += 'No encontré ninguna promo bancaria vigente esta semana. Compra el viernes como siempre; en Vivanda sigue aplicando colaborador + cupón + SIP.' + NL;
   } else {
-    // Que dia conviene ir a cada tienda: se agrupa por dia de la semana.
-    m += '<b>📅 Qué día conviene ir</b>' + NL;
-    for (let dia = 1; dia <= 7; dia++) {
-      const delDia = promos.filter(function (p) { return p.dias_semana.length && p.dias_semana.indexOf(dia) >= 0; });
-      if (!delDia.length) continue;
-      m += '• <b>' + DIAS[dia].charAt(0).toUpperCase() + DIAS[dia].slice(1) + ':</b> ' + delDia.map(function (p) { return esc(p.tienda) + ' con ' + esc(p.tarjeta) + ' (' + esc(p.beneficio) + ')'; }).join('; ') + NL;
+    // 1) Lo que aplica el dia habitual de compras.
+    const delViernes = promos.filter(function (p) { return aplicaDia(p, DIA_COMPRAS); });
+    m += '<b>🗓 ' + cap(DIAS[DIA_COMPRAS]) + ' (tu día de compras)</b>' + NL;
+    if (delViernes.length) m += delViernes.map(function (p) { return '• ' + resumen(p); }).join(NL) + NL;
+    else m += 'Sin promos bancarias extra ese día. En Vivanda aplica lo de siempre: colaborador + cupón + SIP.' + NL;
+
+    // 2) Promos de otros dias: solo vale la pena moverse si el modelo las marco como importantes.
+    const otrosDias = promos.filter(function (p) { return p.dias_semana.length && p.dias_semana.indexOf(DIA_COMPRAS) < 0; });
+    m += NL + '<b>🔁 ¿Conviene cambiar de día?</b>' + NL;
+    const importantes = otrosDias.filter(function (p) { return p.importante; });
+    if (importantes.length) {
+      m += 'Sí, esta semana vale la pena moverse:' + NL;
+      m += importantes.map(function (p) { return '• <b>' + esc(cap(p.dias)) + ':</b> ' + resumen(p); }).join(NL) + NL;
+    } else {
+      m += 'No hace falta: nada de otro día supera lo del ' + DIAS[DIA_COMPRAS] + '.' + NL;
     }
-    const siempre = promos.filter(function (p) { return !p.dias_semana.length; });
-    if (siempre.length) m += '• <b>Cualquier día:</b> ' + siempre.map(function (p) { return esc(p.tienda) + ' con ' + esc(p.tarjeta) + ' (' + esc(p.beneficio) + ')'; }).join('; ') + NL;
+    const menores = otrosDias.filter(function (p) { return !p.importante; });
+    if (menores.length) m += 'Otras promos de otros días (menores): ' + menores.map(function (p) { return esc(p.dias) + ' · ' + esc(p.tienda) + ' · ' + esc(p.beneficio); }).join('; ') + NL;
+
+    // 3) Detalle por tipo de compra.
     m += NL + '<b>🥦 Frescos (ir a la tienda)</b>' + NL;
     const frescos = promos.filter(function (p) { return p.aplica_frescos && p.canal !== 'online'; });
-    m += frescos.length ? frescos.map(function (p) { return fichaPromo(p, true); }).join(NL) : 'Ninguna promo aplica a frescos en tienda esta semana.' + NL;
+    m += frescos.length ? frescos.map(function (p) { return fichaPromo(p, true); }).join(NL) : 'Ninguna promo bancaria aplica a frescos en tienda esta semana.' + NL;
     m += NL + '<b>📦 Envasados (se puede pedir online)</b>' + NL;
     const online = promos.filter(function (p) { return p.canal !== 'tienda'; });
     m += online.length ? online.map(function (p) { return '• ' + esc(p.tienda) + ' · ' + esc(p.tarjeta) + ' · ' + esc(p.beneficio) + (p.dias_semana.length ? ' (' + esc(p.dias) + ')' : ''); }).join(NL) + NL : 'Ninguna promo válida para compra online esta semana.' + NL;
     const inscr = promos.filter(requiereInscripcion);
     if (inscr.length) {
       m += NL + '<b>⚠️ Antes de comprar, inscríbete en:</b>' + NL;
-      m += inscr.map(function (p) { return '• ' + esc(p.tienda) + ' · ' + esc(p.tarjeta) + ': ' + esc(p.inscripcion.replace(/^s[ií]\\s*[:.-]?\\s*/i, '')) + (p.url ? ' ' + esc(p.url) : ''); }).join(NL) + NL;
+      m += inscr.map(function (p) { return '• ' + esc(p.tienda) + ' · ' + esc(p.tarjeta) + ': ' + textoInscripcion(p) + (p.url ? ' ' + esc(p.url) : ''); }).join(NL) + NL;
     }
   }
   if (notas) m += NL + '<i>' + esc(notas) + '</i>' + NL;
@@ -630,14 +654,28 @@ if (d.modo === 'diario') {
   if (nuevas.length) {
     let m = '<b>🆕 ' + (nuevas.length === 1 ? 'Nueva promo de supermercado' : nuevas.length + ' nuevas promos de supermercado') + '</b>' + NL + NL;
     m += nuevas.map(function (p) { return fichaPromo(p, true); }).join(NL);
+    const importantesOtroDia = nuevas.filter(function (p) { return p.importante && p.dias_semana.length && p.dias_semana.indexOf(DIA_COMPRAS) < 0; });
+    if (importantesOtroDia.length) m += NL + '⭐ <b>Ojo:</b> ' + (importantesOtroDia.length === 1 ? 'esta promo cae' : 'estas promos caen') + ' fuera del ' + DIAS[DIA_COMPRAS] + ' y podría valer la pena mover la compra: ' + importantesOtroDia.map(function (p) { return esc(p.dias); }).join(', ') + '.' + NL;
     if (notas) m += NL + '<i>' + esc(notas) + '</i>';
     bloques.push(m);
   }
-  const hoy = promos.filter(function (p) { return p.dias_semana.length && p.dias_semana.indexOf(Number(d.hoy_dia_semana)) >= 0 && !p.es_nueva; });
+  const hoyDia = Number(d.hoy_dia_semana);
+  const hoy = promos.filter(function (p) { return p.dias_semana.length && p.dias_semana.indexOf(hoyDia) >= 0 && !p.es_nueva; });
   if (hoy.length) {
     let m = '<b>📅 Hoy ' + esc(d.hoy_nombre) + ' aplica:</b>' + NL + NL;
     m += hoy.map(function (p) { return fichaPromo(p, false); }).join(NL);
     bloques.push(m);
+  }
+  // La vispera del dia de compras: recordar que aplica manana, con lo permanente incluido.
+  if (hoyDia === DIA_COMPRAS - 1) {
+    const manana = promos.filter(function (p) { return aplicaDia(p, DIA_COMPRAS) && !p.es_nueva; });
+    if (manana.length) {
+      let m = '<b>🛒 Mañana ' + DIAS[DIA_COMPRAS] + ' es día de compras. Aplica:</b>' + NL + NL;
+      m += manana.map(function (p) { return fichaPromo(p, false); }).join(NL);
+      const pend = manana.filter(requiereInscripcion);
+      if (pend.length) m += NL + '⚠️ Revisa que ya estés inscrito en: ' + pend.map(function (p) { return esc(p.tienda) + ' · ' + esc(p.tarjeta); }).join('; ') + '.';
+      bloques.push(m);
+    }
   }
 }
 
@@ -758,11 +796,11 @@ const guardarPromos = node({
 
 const notaCabecera = sticky(
   '## 🛒 Cazador de promos de supermercado\n\n' +
-  'Revisa cada día las promos de **Wong, Vivanda y Flora & Fauna** para las tarjetas **BCP Visa Sapphire**, **Interbank American Express** y **Tarjeta Oh!**.\n\n' +
+  'Revisa cada día las promos de **Wong, Vivanda y Flora & Fauna** para las tarjetas **BCP Visa Sapphire**, **Interbank American Express** y **Tarjeta SIP (antes Oh!)**.\n\n' +
   '**Modos (los decide el nodo Definir modo):**\n' +
   '- **Diario 8:05am**: lee páginas oficiales + correos de bancos + búsqueda web. Solo escribe si hay promo nueva o si hoy es día de promo.\n' +
-  '- **Domingo 6pm**: plan de compras de la semana (qué día ir a qué tienda con qué tarjeta, frescos vs online).\n' +
-  '- **Día 1, 8:05am**: promos del mes y recordatorio de inscripciones.\n\n' +
+  '- **Domingo 6pm**: plan de compras de la semana centrado en el viernes (día habitual): qué aplica ese día, si vale la pena cambiar de día, frescos vs online.\n' +
+  '- **Jueves 8:05am**: además avisa lo que aplica mañana viernes.\n- **Día 1, 8:05am**: promos del mes y recordatorio de inscripciones.\n\n' +
   'La memoria vive en la Data Table **Promos supermercado** (columna clave). Para forzar que vuelva a avisar todo, vacía la tabla.',
   [disparador, definirModo, listarFuentes],
   { color: 4 }

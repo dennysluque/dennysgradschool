@@ -9,18 +9,26 @@ promociones de supermercado para las tarjetas de la casa y avisa por Telegram a 
 |---|---|---|
 | Visa Infinite Sapphire LATAM Pass | BCP | Wong, Vivanda, Flora & Fauna |
 | American Express | Interbank | Wong, Vivanda, Flora & Fauna |
-| Tarjeta Oh! | Financiera Oh! (Intercorp) | Vivanda (misma cadena que plazaVea) |
+| Tarjeta SIP (actualización de la Tarjeta Oh!) | Financiera Oh! (Intercorp) | Vivanda (misma cadena que plazaVea) |
 
 Tiendas de interés: **Wong** y **Vivanda** (cerca de casa) y **Flora & Fauna**. Compra online solo para
 envasados; frescos siempre en tienda. El prompt del modelo ya sabe esto y lo usa para separar
 "frescos en tienda" de "envasados online" en cada mensaje.
 
+Contexto de compra que el agente tiene en cuenta:
+
+- La compra grande se hace en persona los **viernes**. Solo se cambia de día si una promo lo
+  justifica (el modelo marca `importante` cuando el descuento es de 10% o más, o la devolución de
+  S/30 o más en una compra típica).
+- En Vivanda ya se aplican siempre tres descuentos: **colaborador Intercorp + cupón + Tarjeta SIP**.
+  Por eso cada promo de Vivanda indica si es **acumulable** con eso ("sí", "no" o "no dice").
+
 ## Cadencia (y por qué)
 
 | Cuándo | Modo | Qué manda |
 |---|---|---|
-| Todos los días 8:05 am | `diario` | Solo escribe si apareció una promo **nueva** o si **hoy** es día de una promo ya conocida (ej. "hoy jueves aplica..."). Si no hay nada, silencio. |
-| Domingo 6:00 pm | `semana` | Plan de compras de la semana: qué día ir a qué tienda con qué tarjeta, promos para frescos en tienda, promos válidas online, y qué inscripciones hacer antes. |
+| Todos los días 8:05 am | `diario` | Solo escribe si apareció una promo **nueva** o si **hoy** es día de una promo ya conocida (ej. "hoy jueves aplica..."). Los jueves además avisa lo que aplica **mañana viernes**. Si no hay nada, silencio. |
+| Domingo 6:00 pm | `semana` | Plan de compras de la semana centrado en el viernes: qué aplica ese día, si **conviene cambiar de día** (solo si hay una promo importante), promos para frescos en tienda, promos válidas online, y qué inscripciones hacer antes. |
 | Día 1 del mes, 8:05 am | `mes` | Todas las promos del mes y recordatorio de inscribirse (Interbank y BCP renuevan sus campañas de supermercado mes a mes y casi siempre piden registro previo). |
 
 Las promos de supermercado en Perú cambian casi siempre a inicio de mes y están atadas a un día de la
@@ -52,6 +60,7 @@ es el que sirve para planear la compra semanal.
 
 - Agregar o quitar páginas: editar la lista del nodo **Listar fuentes**.
 - Cambiar tarjetas, tiendas o reglas: editar el mensaje de sistema del nodo **Buscar y extraer promos**.
+- Cambiar el día habitual de compras: constante `DIA_COMPRAS` en el nodo **Armar mensaje** (1=lunes … 7=domingo) y la frase "VIERNES" del prompt.
 - Cambiar horarios: nodo **Diario 8am y domingo 6pm**. El modo `semana` se activa cuando la corrida
   ocurre después del mediodía, así que si mueves el resumen semanal mantenlo en la tarde.
 - Forzar que vuelva a avisar todo: vaciar la Data Table `Promos supermercado`.
