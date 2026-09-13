@@ -576,6 +576,9 @@ function fichaPromo(p, detallada) {
 const promos = d.promos || [];
 const nuevas = d.nuevas || [];
 const bloques = [];
+// Las notas del modelo son utiles pero pueden ser largas: en el aviso diario se recortan.
+const notasLargas = String(d.notas || '');
+const notas = d.modo === 'diario' && notasLargas.length > 900 ? notasLargas.slice(0, 900) + '…' : notasLargas;
 
 if (d.modo === 'semana') {
   let m = '<b>🛒 Plan de compras de la semana</b>' + NL;
@@ -604,7 +607,7 @@ if (d.modo === 'semana') {
       m += inscr.map(function (p) { return '• ' + esc(p.tienda) + ' · ' + esc(p.tarjeta) + ': ' + esc(p.inscripcion.replace(/^s[ií]\\s*[:.-]?\\s*/i, '')) + (p.url ? ' ' + esc(p.url) : ''); }).join(NL) + NL;
     }
   }
-  if (d.notas) m += NL + '<i>' + esc(d.notas) + '</i>' + NL;
+  if (notas) m += NL + '<i>' + esc(notas) + '</i>' + NL;
   if (d.caidas && d.caidas.length) m += NL + '<i>Páginas que no pude leer hoy: ' + esc(d.caidas.join(', ')) + '. Me apoyé en búsqueda web y correos.</i>';
   bloques.push(m);
 }
@@ -619,7 +622,7 @@ if (d.modo === 'mes') {
     if (inscr.length) m += NL + '⚠️ <b>' + inscr.length + (inscr.length === 1 ? ' promo requiere' : ' promos requieren') + ' inscripción este mes.</b> Hazlo hoy para no perderlas.' + NL;
   }
   m += NL + '<i>Tip: revisa también la sección Promociones de la app de Interbank y "Mis beneficios" en la app BCP; a veces la inscripción solo aparece ahí.</i>';
-  if (d.notas) m += NL + '<i>' + esc(d.notas) + '</i>';
+  if (notas) m += NL + '<i>' + esc(notas) + '</i>';
   bloques.push(m);
 }
 
@@ -627,7 +630,7 @@ if (d.modo === 'diario') {
   if (nuevas.length) {
     let m = '<b>🆕 ' + (nuevas.length === 1 ? 'Nueva promo de supermercado' : nuevas.length + ' nuevas promos de supermercado') + '</b>' + NL + NL;
     m += nuevas.map(function (p) { return fichaPromo(p, true); }).join(NL);
-    if (d.notas) m += NL + '<i>' + esc(d.notas) + '</i>';
+    if (notas) m += NL + '<i>' + esc(notas) + '</i>';
     bloques.push(m);
   }
   const hoy = promos.filter(function (p) { return p.dias_semana.length && p.dias_semana.indexOf(Number(d.hoy_dia_semana)) >= 0 && !p.es_nueva; });
