@@ -339,6 +339,7 @@ body ::selection {
 
 .lab-carousel {
     display: flex;
+    justify-content: safe center;
     gap: 1rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -347,6 +348,7 @@ body ::selection {
     scrollbar-width: none;
     padding: 0.25rem 0;
     flex: 1;
+    min-width: 0;
 }
 
 .lab-carousel::-webkit-scrollbar {
