@@ -428,7 +428,18 @@
         var currentLang = 'es';
 
         var labItems = [
-            { id: 'ces', image: 'media/lab/ces-2026.jpg', titleKey: 'lab_ces_title', descKey: 'lab_ces_desc' },
+            {
+                id: 'ces',
+                image: 'media/lab/ces-video-01.jpg',
+                titleKey: 'lab_ces_title',
+                descKey: 'lab_ces_desc',
+                media: [
+                    { type: 'video', src: 'media/lab/ces-video-01.mp4', poster: 'media/lab/ces-video-01.jpg' },
+                    { type: 'video', src: 'media/lab/ces-video-02.mp4', poster: 'media/lab/ces-video-02.jpg' },
+                    { type: 'video', src: 'media/lab/ces-video-03.mp4', poster: 'media/lab/ces-video-03.jpg' },
+                    { type: 'video', src: 'media/lab/ces-video-04.mp4', poster: 'media/lab/ces-video-04.jpg' }
+                ]
+            },
             {
                 id: 'infocomm',
                 image: 'media/lab/infocomm-video-01.jpg',
@@ -590,6 +601,10 @@
                     { type: 'video', src: 'media/future/video-03.mp4', poster: 'media/future/video-03.jpg' },
                     { type: 'video', src: 'media/future/video-04.mp4', poster: 'media/future/video-04.jpg' }
                 ]
+            },
+            ces: {
+                title: 'CES 2026 — Inspiration',
+                items: labItems[0].media
             },
             infocomm: {
                 title: 'Infocomm Orlando — Notes',
