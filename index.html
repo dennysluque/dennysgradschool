@@ -122,7 +122,7 @@
                     </p>
                 </div>
                 <div class="card-media">
-                    <img src="media/future/photo-04.jpg" alt="" loading="lazy">
+                    <img src="media/future/video-01.jpg" alt="" loading="lazy">
                 </div>
                 <div class="card-footer font-mono">
                     <span>→ NYU ITP</span>
@@ -244,8 +244,6 @@
                 lab_infocomm_desc: 'Análisis de estándares AV profesionales observados en Infocomm Orlando: flujos de señal, control room design y previsualización para instalaciones a gran escala. Documento cómo la industria B2B resuelve redundancia, latencia y operación en vivo, y qué aprendizajes pueden trasladarse a espacios C-Level e instalaciones híbridas en mercados emergentes. Incluye referencias de UI de consolas, patrones de switching y arquitecturas IP-based que estoy evaluando para próximos despliegues.',
                 lab_ny_title: 'Museos NY — AV Espacial',
                 lab_ny_desc: 'Estudio comparativo de experiencias en museos de Nueva York donde el AV espacial sostiene la narrativa antes que la tecnología. Registro patrones de ritmo, iluminación, sonido direccional y momentos de pausa que generan asombro sin saturar al visitante. Este prototipo conceptual traduce esos principios a entornos corporativos: menos demo técnica, más coreografía emocional. Busco que cada transición cuente una parte de la historia de marca y invite a explorar, no solo a consumir contenido pasivamente.',
-                lab_vr_title: 'VR / Unity — Prototipos',
-                lab_vr_desc: 'Serie de prototipos en Unity y VR para previsualizar espacios antes de la instalación física. Pruebo escala, ergonomía de interfaces flotantes y legibilidad de contenido en diferentes distancias de visión. Estos experimentos reducen iteraciones costosas en sitio y permiten validar flujos con stakeholders no técnicos. El objetivo es acortar el ciclo entre idea, prueba inmersiva y decisión de producción, manteniendo coherencia entre lo digital simulado y el despliegue AV final en arquitectura real.',
                 narrative_label: '[03] Narrativa',
                 narrative_title: 'De la Curiosidad Humana al Impacto de Sistemas',
                 narrative_p1: 'Nacido en Arequipa y establecido en Lima. Mi trayectoria se fundamenta en la confluencia de la estrategia en Comunicación y Publicidad (UPC, 2021) y una robusta formación de liderazgo práctico y desarrollo audiovisual en comunidades de voluntariado (Camino de Vida). Allí aprendí a coordinar equipos multidisciplinarios basados estrictamente en el propósito y la motivación.',
@@ -297,8 +295,6 @@
                 lab_infocomm_desc: 'Analysis of professional AV standards observed at Infocomm Orlando: signal flows, control room design, and previsualization for large-scale installations. I document how the B2B industry solves redundancy, latency, and live operation, and which learnings can transfer to C-Level spaces and hybrid deployments in emerging markets. Includes references to console UI, switching patterns, and IP-based architectures I am evaluating for upcoming rollouts.',
                 lab_ny_title: 'NY Museums — Spatial AV',
                 lab_ny_desc: 'Comparative study of experiences in New York museums where spatial AV supports narrative before technology. I record patterns of pacing, lighting, directional sound, and pause moments that create wonder without overwhelming visitors. This conceptual prototype translates those principles to corporate environments: less technical demo, more emotional choreography. I seek for each transition to tell part of the brand story and invite exploration, not just passive content consumption.',
-                lab_vr_title: 'VR / Unity — Prototypes',
-                lab_vr_desc: 'A series of Unity and VR prototypes to preview spaces before physical installation. I test scale, floating interface ergonomics, and content legibility at different viewing distances. These experiments reduce costly on-site iterations and validate flows with non-technical stakeholders. The goal is to shorten the cycle between idea, immersive test, and production decision while keeping coherence between simulated digital space and final AV deployment in real architecture.',
                 narrative_label: '[03] Narrative',
                 narrative_title: 'From Human Curiosity to Systems Impact',
                 narrative_p1: 'Born in Arequipa and based in Lima. My path builds on the convergence of Communication and Advertising strategy (UPC, 2021) and hands-on leadership and audiovisual development in volunteer communities (Camino de Vida). There I learned to coordinate multidisciplinary teams strictly around purpose and motivation.',
@@ -433,9 +429,34 @@
 
         var labItems = [
             { id: 'ces', image: 'media/lab/ces-2026.jpg', titleKey: 'lab_ces_title', descKey: 'lab_ces_desc' },
-            { id: 'infocomm', image: 'media/lab/infocomm-orlando.jpg', titleKey: 'lab_infocomm_title', descKey: 'lab_infocomm_desc' },
-            { id: 'ny', image: 'media/lab/ny-museums.jpg', titleKey: 'lab_ny_title', descKey: 'lab_ny_desc' },
-            { id: 'vr', image: 'media/lab/vr-unity.jpg', titleKey: 'lab_vr_title', descKey: 'lab_vr_desc' }
+            {
+                id: 'infocomm',
+                image: 'media/lab/infocomm-video-01.jpg',
+                titleKey: 'lab_infocomm_title',
+                descKey: 'lab_infocomm_desc',
+                media: [
+                    { type: 'video', src: 'media/lab/infocomm-video-01.mp4', poster: 'media/lab/infocomm-video-01.jpg' },
+                    { type: 'video', src: 'media/lab/infocomm-video-02.mp4', poster: 'media/lab/infocomm-video-02.jpg' },
+                    { type: 'video', src: 'media/lab/infocomm-video-03.mp4', poster: 'media/lab/infocomm-video-03.jpg' },
+                    { type: 'video', src: 'media/lab/infocomm-video-04.mp4', poster: 'media/lab/infocomm-video-04.jpg' },
+                    { type: 'video', src: 'media/lab/infocomm-video-05.mp4', poster: 'media/lab/infocomm-video-05.jpg' },
+                    { type: 'video', src: 'media/lab/infocomm-video-06.mp4', poster: 'media/lab/infocomm-video-06.jpg' },
+                    { type: 'video', src: 'media/lab/infocomm-video-07.mp4', poster: 'media/lab/infocomm-video-07.jpg' }
+                ]
+            },
+            {
+                id: 'ny',
+                image: 'media/lab/ny-photo-03.jpg',
+                titleKey: 'lab_ny_title',
+                descKey: 'lab_ny_desc',
+                media: [
+                    { type: 'image', src: 'media/lab/ny-photo-01.jpg', alt: 'NY Museums — foto 1' },
+                    { type: 'image', src: 'media/lab/ny-photo-02.jpg', alt: 'NY Museums — foto 2' },
+                    { type: 'video', src: 'media/lab/ny-video-01.mp4', poster: 'media/lab/ny-video-01.jpg' },
+                    { type: 'video', src: 'media/lab/ny-video-02.mp4', poster: 'media/lab/ny-video-02.jpg' },
+                    { type: 'image', src: 'media/lab/ny-photo-03.jpg', alt: 'NY Museums — foto 3' }
+                ]
+            }
         ];
 
         var labCarousel = document.getElementById('lab-carousel');
@@ -493,6 +514,11 @@
         function openLabDetail(id) {
             var item = getLabItem(id);
             if (!item) return;
+
+            if (item.media && item.media.length) {
+                openGallery(id, null);
+                return;
+            }
 
             labDetailOpenId = id;
             labDetailImage.src = item.image;
@@ -562,25 +588,23 @@
                     { type: 'video', src: 'media/future/video-02.mp4', poster: 'media/future/video-02.jpg' },
                     { type: 'image', src: 'media/future/photo-01.jpg', alt: 'Future — foto 1' },
                     { type: 'video', src: 'media/future/video-03.mp4', poster: 'media/future/video-03.jpg' },
-                    { type: 'video', src: 'media/future/video-04.mp4', poster: 'media/future/video-04.jpg' },
-                    { type: 'image', src: 'media/future/photo-02.jpg', alt: 'Future — foto 2' },
-                    { type: 'image', src: 'media/future/photo-03.jpg', alt: 'Future — foto 3' },
-                    { type: 'video', src: 'media/future/video-05.mp4', poster: 'media/future/video-05.jpg' },
-                    { type: 'video', src: 'media/future/video-06.mp4', poster: 'media/future/video-06.jpg' },
-                    { type: 'image', src: 'media/future/photo-04.jpg', alt: 'Future — foto 4' },
-                    { type: 'video', src: 'media/future/video-07.mp4', poster: 'media/future/video-07.jpg' },
-                    { type: 'video', src: 'media/future/video-08.mp4', poster: 'media/future/video-08.jpg' },
-                    { type: 'video', src: 'media/future/video-09.mp4', poster: 'media/future/video-09.jpg' },
-                    { type: 'video', src: 'media/future/video-10.mp4', poster: 'media/future/video-10.jpg' },
-                    { type: 'video', src: 'media/future/video-11.mp4', poster: 'media/future/video-11.jpg' },
-                    { type: 'video', src: 'media/future/video-12.mp4', poster: 'media/future/video-12.jpg' },
-                    { type: 'video', src: 'media/future/video-13.mp4', poster: 'media/future/video-13.jpg' }
+                    { type: 'video', src: 'media/future/video-04.mp4', poster: 'media/future/video-04.jpg' }
                 ]
+            },
+            infocomm: {
+                title: 'Infocomm Orlando — Notes',
+                items: labItems[1].media
+            },
+            ny: {
+                title: 'NY Museums — Spatial AV',
+                items: labItems[2].media
             }
         };
 
         var galleryState = {
             projectId: null,
+            titleKey: null,
+            articleKey: null,
             index: 0,
             items: []
         };
@@ -608,7 +632,17 @@
         }
 
         function renderGalleryArticle(projectId) {
-            if (!galleryArticle || !projectId) return;
+            if (!galleryArticle) return;
+
+            if (galleryState.articleKey) {
+                galleryArticle.innerHTML = '';
+                var note = document.createElement('p');
+                note.textContent = t(galleryState.articleKey);
+                galleryArticle.appendChild(note);
+                return;
+            }
+
+            if (!projectId) return;
 
             var htmlKey = projectId + '_article_html';
             if (translations[currentLang][htmlKey]) {
@@ -722,9 +756,14 @@
             galleryState.projectId = projectId;
             galleryState.index = 0;
             galleryState.items = project.items;
+            var labItem = getLabItem(projectId);
+            galleryState.titleKey = labItem ? labItem.titleKey : null;
+            galleryState.articleKey = labItem ? labItem.descKey : null;
 
             var titleEl = cardElement ? cardElement.querySelector('.card-title') : null;
-            galleryTitle.textContent = titleEl ? titleEl.textContent : project.title;
+            galleryTitle.textContent = galleryState.titleKey
+                ? t(galleryState.titleKey)
+                : (titleEl ? titleEl.textContent : project.title);
             buildGalleryThumbs(project.items);
             renderGallerySlide(0);
             renderGalleryArticle(projectId);
@@ -743,6 +782,11 @@
             galleryStage.innerHTML = '';
             galleryThumbs.innerHTML = '';
             galleryArticle.innerHTML = '';
+            galleryState.projectId = null;
+            galleryState.titleKey = null;
+            galleryState.articleKey = null;
+            galleryState.items = [];
+            galleryState.index = 0;
         }
 
         function stepGallery(direction) {
@@ -829,8 +873,13 @@
             }
 
             if (!galleryModal.hidden && galleryState.items.length) {
+                if (galleryState.titleKey) {
+                    galleryTitle.textContent = t(galleryState.titleKey);
+                } else if (galleryState.projectId) {
+                    var titleKey = galleryState.projectId + '_title';
+                    galleryTitle.textContent = translations[lang][titleKey] || t(titleKey);
+                }
                 if (galleryState.projectId) {
-                    galleryTitle.textContent = t(galleryState.projectId + '_title');
                     renderGalleryArticle(galleryState.projectId);
                 }
                 buildGalleryThumbs(galleryState.items);
